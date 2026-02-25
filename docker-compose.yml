@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+   db:
+    image: postgres:15
+    container_name: finance_db
+    restart: always
+    environment:
+      - POSTGRESQL_USER=user_fin
+      - POSTGRESQL_PASS=finance189
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+   finance:
+    build: .
+    container_name: finance_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/financeAPI
+    environment:
+      - DATABASE= postgresql://POSTGRESQL_USER:POSTGRESQL_PASS@host:5432/finance
+    depends_on:
+      - db
+
+ 

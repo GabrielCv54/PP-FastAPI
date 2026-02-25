@@ -1,0 +1,32 @@
+# Exceções da API
+class FinanceException(Exception):
+    def __init__(self, message_error,status_code):
+        self.message_error = message_error
+        self.status_code = status_code
+
+class InsufficientFunds(FinanceException):
+    def __init__(self,balance_ammout:float, withdrawal_amount:float):
+       message = f"Saldo insuficiente. Seu saldo atual:{balance_ammout} é indiferente com o valor do seu saque :{withdrawal_amount}"
+       super.__init__(message_error=message,status_code=400)
+
+class IdNonExists(FinanceException):
+    def __init__(self):
+        message="Erro, o id não existe!!"
+        super().__init__(message_error=message,status_code=404)
+
+class NegativeBalance(FinanceException):
+    def __init__(self):
+        message = 'Erro, o saldo está no vermelho, logo a compra não pode ser realizada!!'
+        super().__init__(message_error=message, status_code=400)
+
+class CategoryNonExists(FinanceException):
+    def __init__(self):
+        message = "A categoria não está cadastrada!"
+        super().__init__(message_error=message,status_code=404)
+
+class AccountBlocked(FinanceException):
+    def __init__(self):
+        message = 'Conta bloqeuada! Não é possível utiliza-la no momento.'
+        super().__init__(message_error=message,status_code=400)
+
+    

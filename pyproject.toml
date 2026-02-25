@@ -1,0 +1,8 @@
+name = "FastAPI- Finance API"
+version = "0.1.0"
+description = "Projeto de criação de uma API de gestão de finanças pessoais"
+
+authors = [
+    {name="Finance-API",email="gabriel.carvalhovieira123@gmail.com"}
+]
+
