@@ -29,4 +29,17 @@ class AccountBlocked(FinanceException):
         message = 'Conta bloqeuada! Não é possível utiliza-la no momento.'
         super().__init__(message_error=message,status_code=400)
 
-    
+class InvalidEmailLogin(FinanceException):
+    def __init__(self):
+        message = 'Credencial email inválido!! Verifique-o novamente'
+        super().__init__(message_error=message, status_code=400)
+
+class InvalidPassword(FinanceException):
+    def __init__(self):
+        message = 'Senha inválida!! Verifique o tamanho da senha e digite novamente'
+        super().__init__(message_error=message, status_code=400)
+
+class UserNotFound(FinanceException):
+    def __init__(self):
+        message = 'Usuário não encontrado'
+        super().__init__(message_error=message, status_code=404)
