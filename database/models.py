@@ -1,27 +1,27 @@
 from .db import Base
-from sqlalchemy import Column,Integer,String,Date,ForeignKey,Float,DateTime,ARRAY
-from sqlalchemy.orm import mapped_column,Mapped,relationship
+from sqlalchemy import Column,Integer,String,Date,ForeignKey,Float,DateTime,Boolean
+from sqlalchemy.orm import relationship
 
 
 class User(Base):
     __tablename__  = 'user'
     id = Column('id',Integer, primary_key=True,autoincrement=True)
     name = Column('name',String)
-    cpf = Column('cpf',String)
-    data_nasc = Column('date_nasc',Date)
-    email = Column("email",String)
+    cpf = Column('cpf',String,unique=True)
+    date_nasc = Column('date_nasc',Date)
+    email = Column("email",String,unique=True)
     password = Column('password',String)
-    transactions_id = mapped_column('transactions_id',ForeignKey('transaction.id'))
+    transactions = relationship('Transaction',back_populates=('transac_user'))
     
-    def __init__(self,name,cpf,data_nasc,email,password):
+    def __init__(self,name,cpf,date_nasc,email,password):
         self.name = name
         self.cpf = cpf
-        self.data_nasc = data_nasc
+        self.date_nasc = date_nasc
         self.email = email
         self.password = password
-
+        
     def dici(self):
-        return {"name":self.name,"cpf":self.cpf,"data_nasc":self.data_nasc,"email":self.email,'password':self.password}
+        return {"id":self.id,"name":self.name,"cpf":self.cpf,"date_nasc":self.date_nasc,"email":self.email,"password":self.password,"transactions_id":[transac.id for transac in self.transactions]}
 
 
 class Account(Base):
@@ -30,8 +30,8 @@ class Account(Base):
     type = Column('type',String)
     balance = Column("balance",Float,nullable=False)
     bank = Column('bank',String)
-    status = Column('status',String)
-    client_id : Mapped[int] = mapped_column(ForeignKey('user.id'))
+    status = Column('status',String,default='ativa')
+    client_id = Column(ForeignKey('user.id'))
     agency_number = Column('num_agency',Integer)
 
     def __init__(self,type,balance,status,client_id,agency_number):
@@ -47,16 +47,42 @@ class Account(Base):
 
 class Category(Base):
     __tablename__ = 'category'
-    id = Column('id',primary_key=True,autoincrement=True)
-    description = Column('descricao',nullable=False)
+    id = Column('id',Integer,primary_key=True,autoincrement=True)
+    type = Column('type',String,nullable=False)
+    description = Column('description',String,nullable=False)
+    limit_value = Column('limit_value',Float,nullable=False)
+    status = Column('status',String,nullable=False)
     #transactions_id = Column('transactions',ARRAY)
+
+    def __init__(self,type,description,limit_value,status):
+        self.type = type
+        self.description = description
+        self.limit_value = limit_value
+        self.status = status
+
+    def dici(self):
+        return {'type':self.type,'description':self.description,'limit_value':self.limit_value,'status':self.status}
 
 
 class Transaction(Base):
     __tablename__  = 'transaction'
-    id = Column('id',primary_key=True,autoincrement=True)
-    description =Column('descricao',String)
-    value = Column('valor',Float,nullable=False)
-    date_value = Column('data_transacao',DateTime)
-    type_transac = Column('tipo_transacao',String,nullable=False)
-    account_id = mapped_column('id_conta',ForeignKey('account.id'))
+    id = Column('id',Integer,primary_key=True,autoincrement=True)
+    description =Column('description',String)
+    value = Column('value',Float,nullable=False)
+    date_transaction = Column('date_transaction',DateTime,nullable=False)
+    type_transaction = Column('type_transaction',String,nullable=False)
+    user_id = Column(Integer,ForeignKey('user.id'))
+    transac_user = relationship('User',back_populates='transactions')
+    account_id = Column('account_id',Integer,ForeignKey('account.id'))
+
+    def __init__(self,description, value, date_value, user_id,account_id,type_transaction):
+        self.description = description
+        self.value = value
+        self.date_value = date_value
+        self.user_id = user_id
+        self.account_id = account_id
+        self.type_transaction = type_transaction
+
+    def dici(self):
+        return {"description":self.description,"balance":self.value,
+                "date_value":self.date_value,'type_transac':self.type_transaction}
