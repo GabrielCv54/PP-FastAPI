@@ -1,9 +1,11 @@
-from pydantic import BaseModel, Field, ValidationError, field_validator
-from typing import Optional
-from datetime import datetime
+from pydantic import BaseModel, Field, field_validator,ConfigDict
+from typing import Optional,List
+from datetime import datetime,date
 from decimal import Decimal
 from enum import Enum
 from random import randint
+from erros.errors import InvalidPassword
+from fastapi import Form
 
 
 # Classes Base de Transação
@@ -17,13 +19,14 @@ class TransactionStatus(str, Enum):
 
 class NewTransactionBase(TransactionBase):
     date_transaction: Optional[datetime] = None
-    type__trans: str = Field()
+    description: str 
+    type_transaction: str 
     status: TransactionStatus
-
+    user_id: int
     @field_validator('date_transaction')
     @classmethod
     def future_date_invalid(cls, fut: datetime):
-        if fut > datetime.now():
+        if fut and fut > datetime.now():
             return 'A data da transação deve ser atual!!'
 
 class TransactionResponse(TransactionBase):
@@ -32,46 +35,41 @@ class TransactionResponse(TransactionBase):
         "from_attributes": True
     }
 
+
+
 # Classes Base de Usuário
 class UserBase(BaseModel):
-    name: str = Field(min_length=4)
-    data_nasc: Optional[datetime] = None
-    email : str = Field(...,max_length=20)
-    transactions_id: list[TransactionResponse] = []
-
-    @field_validator("transactions_id")
-    @classmethod
-    def validate_transactions_id(cls, transact_id):
-        if not transact_id:
-            raise ValueError("Transação não foi feita ou o id dela não foi encontrado!!")
-        return transact_id
+    name: str = Field(min_length=2)
+    date_nasc: date
+    email : str = Field(...,max_length=50)
+    cpf: str = Field(None,max_length=11)
+    password: str = Field(...,min_length=8,max_length=72)
         
 class NewUserBase(UserBase):
     cpf: str = Field(...,min_length=11,max_length=11)
-    password: str = Field(...,min_length=8)
+    transactions: List[TransactionResponse] = []
 
-    @field_validator('cpf')
+class UserLogin(UserBase):
+    email: str = Form(...,max_length=50)
+    password: str = Form(...,min_length=8)
+    @field_validator('password')
     @classmethod
-    def validate_cpf(cls,cpf):
-        if cpf:
-             return f"CPF {cpf} válido! "
-        raise "CPF com tamanho inválido! O CPF precisa ter 11 caracteres!"
+    def validate_passw(cls, passw):
+        if len(passw) > 8:
+            return passw
+        raise InvalidPassword
 
 class UserUpdate(UserBase):
     name: Optional[str] = Field(None)
-    data_nasc: Optional[datetime] = Field(None)
+    date_nasc: Optional[date] = Field(None)
     email: Optional[str] = Field(None)
     cpf: Optional[str] = Field(None, max_length=11)
-    password : Optional[str] = Field(None,min_length=8)
+    password : Optional[str] = Field(None,min_length=8,max_length=72)
 
 class UserResponse(UserBase):
     id : int 
     active: bool
-    model_config = {
-        'from_attributes': True
-    }
-
-    
+    model_config = ConfigDict(from_attributes=True)
     @field_validator('id')
     @classmethod
     def validate_id(cls, id):
@@ -93,10 +91,12 @@ class AccountStatus(str, Enum):
     BLOCKED = 'bloqueada'
 
 class AccountBase(BaseModel):
-    balance: Decimal = Field()
+    balance: Decimal = Field(max_length=10000)
     type: AccountType
     bank: str = Field(...,min_length=2)
+    description: str
     status: AccountStatus
+    client_id: int
 
 class AccountResponse(AccountBase):
     id: int
@@ -104,10 +104,18 @@ class AccountResponse(AccountBase):
         "from_attributes": True
     }
 
+class NewAccountBase(AccountBase):
+    balance: Decimal = Field(...)
+    agency_number : int = Field(randint(0,500))
+    bank: str = Field(...,min_length=2)
+
 
 # Classes Base de Categoria
-class CategoryBase(BaseModel):
-    pass
+class CategoryStatus(str,Enum):
+    INPUT = 'entrada'
+    OUTPUT = 'saída'
 
-class CategoryStatus(CategoryBase):
-    pass
+class CategoryBase(BaseModel):
+    type: str  = Field(...,min_length=5,max_length=50)
+    limit_value: float
+    
