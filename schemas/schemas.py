@@ -17,10 +17,16 @@ class TransactionStatus(str, Enum):
     CANCELED = "Cancelada"
     PENDING = "Pendente"
 
+class TransactionType(str, Enum):
+    CARD = 'cartão'
+    MONEY = 'dinheiro em espécie'
+    PIX = 'pix'
+
+
 class NewTransactionBase(TransactionBase):
     date_transaction: Optional[datetime] = None
     description: str 
-    type_transaction: str 
+    type_transaction: TransactionType 
     status: TransactionStatus
     user_id: int
     @field_validator('date_transaction')
@@ -94,7 +100,6 @@ class AccountBase(BaseModel):
     balance: Decimal = Field(max_length=10000)
     type: AccountType
     bank: str = Field(...,min_length=2)
-    description: str
     status: AccountStatus
     client_id: int
 
@@ -108,6 +113,7 @@ class NewAccountBase(AccountBase):
     balance: Decimal = Field(...)
     agency_number : int = Field(randint(0,500))
     bank: str = Field(...,min_length=2)
+
 
 
 # Classes Base de Categoria
