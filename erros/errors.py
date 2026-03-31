@@ -26,7 +26,7 @@ class CategoryNonExists(FinanceException):
 
 class AccountBlocked(FinanceException):
     def __init__(self):
-        message = 'Conta bloqeuada! Não é possível utiliza-la no momento.'
+        message = 'Conta bloqeuada! Não é possível utilizá-la no momento.'
         super().__init__(message_error=message,status_code=400)
 
 class InvalidEmailLogin(FinanceException):
