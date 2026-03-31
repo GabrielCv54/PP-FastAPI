@@ -43,3 +43,8 @@ class UserNotFound(FinanceException):
     def __init__(self):
         message = 'Usuário não encontrado'
         super().__init__(message_error=message, status_code=404)
+
+class AccountNotFound(FinanceException):
+    def __init__(self):
+        message = 'Conta não encontrada!!'
+        super().__init__(message_error=message, status_code=404)
