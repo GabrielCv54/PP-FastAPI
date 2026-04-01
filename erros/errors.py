@@ -15,8 +15,8 @@ class IdNonExists(FinanceException):
         super().__init__(message_error=message,status_code=404)
 
 class NegativeBalance(FinanceException):
-    def __init__(self):
-        message = 'Erro, o saldo está no vermelho, logo a compra não pode ser realizada!!'
+    def __init__(self,balance_value):
+        message = f'Erro, o saldo está no vermelho: {balance_value}, logo a transação não pode ser realizada!!'
         super().__init__(message_error=message, status_code=400)
 
 class CategoryNonExists(FinanceException):
