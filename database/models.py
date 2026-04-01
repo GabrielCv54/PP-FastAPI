@@ -34,9 +34,10 @@ class Account(Base):
     client_id = Column(ForeignKey('user.id'))
     agency_number = Column('num_agency',Integer)
 
-    def __init__(self,type,balance,status,client_id,agency_number):
+    def __init__(self,type,balance,bank,status,client_id,agency_number):
         self.type = type
         self.balance = balance
+        self.bank = bank
         self.status = status
         self.client_id = client_id
         self.agency_number = agency_number
@@ -75,14 +76,14 @@ class Transaction(Base):
     transac_user = relationship('User',back_populates='transactions')
     account_id = Column('account_id',Integer,ForeignKey('account.id'))
 
-    def __init__(self,description, value, date_value, user_id,account_id,type_transaction):
+    def __init__(self,description, value, date_transaction, user_id,account_id,type_transaction):
         self.description = description
         self.value = value
-        self.date_value = date_value
+        self.date_transaction = date_transaction
         self.user_id = user_id
         self.account_id = account_id
         self.type_transaction = type_transaction
 
     def dici(self):
-        return {"description":self.description,"balance":self.value,
-                "date_value":self.date_value,'type_transac':self.type_transaction}
+        return {"description":self.description,"value":self.value,
+                "date_transaction":self.date_transaction,'type_transaction':self.type_transaction,"account_id":self.account_id,"user_id":self.user_id}
