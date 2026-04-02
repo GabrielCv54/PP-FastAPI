@@ -43,7 +43,7 @@ class Account(Base):
         self.agency_number = agency_number
 
     def dici(self):
-        return {"type":self.type,"balance":self.balance,"bank":self.bank,"status":self.status,"client_id":self.client_id,"agency_number":self.agency_number}
+        return {"id":self.id,"type":self.type,"balance":self.balance,"bank":self.bank,"status":self.status,"client_id":self.client_id,"agency_number":self.agency_number}
 
 
 class Category(Base):
