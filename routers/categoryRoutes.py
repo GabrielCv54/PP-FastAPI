@@ -16,7 +16,7 @@ def request_return_categories():
 @category_router.post('/')
 def request_register_category(request: CategoryBase):
      new_category = Category(type=request.type,description=request.description)
-     session.add(request)
+     session.add(new_category)
      session.commit()
 
 @category_router.put('/{id}')
