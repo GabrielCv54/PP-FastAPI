@@ -10,30 +10,32 @@ from fastapi import Form
 
 # Classes Base de Transação
 class TransactionBase(BaseModel):
-    total: Decimal = Field(...)
+    value: Decimal 
 
 class TransactionStatus(str, Enum):
-    APPROVED = "Aprovada"
-    CANCELED = "Cancelada"
-    PENDING = "Pendente"
+    APPROVED = "aprovada"
+    CANCELED = "cancelada"
+    PENDING = "pendente"
 
 class TransactionType(str, Enum):
     CARD = 'cartão'
     MONEY = 'dinheiro em espécie'
     PIX = 'pix'
 
-
 class NewTransactionBase(TransactionBase):
-    date_transaction: Optional[datetime] = None
+    date_transaction: datetime
     description: str 
-    type_transaction: TransactionType 
-    status: TransactionStatus
+    type_transaction: TransactionType
+    status: Optional[TransactionStatus] = None
+    value: float
     user_id: int
+    account_id: int
     @field_validator('date_transaction')
     @classmethod
     def future_date_invalid(cls, fut: datetime):
         if fut and fut > datetime.now():
-            return 'A data da transação deve ser atual!!'
+            raise ValueError('A data da transação deve ser atual!!')
+        return fut
 
 class TransactionResponse(TransactionBase):
     id: int
