@@ -70,7 +70,7 @@ class Transaction(Base):
     id = Column('id',Integer,primary_key=True,autoincrement=True)
     description =Column('description',String)
     value = Column('value',Float,nullable=False)
-    date_transaction = Column('date_transaction',DateTime,nullable=False)
+    date_transaction = Column('date_transaction',Date,nullable=False)
     type_transaction = Column('type_transaction',String,nullable=False)
     user_id = Column(Integer,ForeignKey('user.id'))
     transac_user = relationship('User',back_populates='transactions')
