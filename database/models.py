@@ -1,7 +1,7 @@
 from .db import Base
 from sqlalchemy import Column,Integer,String,Date,ForeignKey,Float,DateTime,Boolean
 from sqlalchemy.orm import relationship
-
+from datetime import date
 
 class User(Base):
     __tablename__  = 'user'
@@ -70,7 +70,7 @@ class Transaction(Base):
     id = Column('id',Integer,primary_key=True,autoincrement=True)
     description =Column('description',String)
     value = Column('value',Float,nullable=False)
-    date_transaction = Column('date_transaction',Date,nullable=False)
+    date_transaction = Column('date_transaction',Date,nullable=False,default=date.today())
     type_transaction = Column('type_transaction',String,nullable=False)
     user_id = Column(Integer,ForeignKey('user.id'))
     transac_user = relationship('User',back_populates='transactions')
