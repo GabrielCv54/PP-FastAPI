@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Request,status
-from erros.errors import InsufficientFunds,NegativeBalance,IdNonExists
+from erros.errors import InsufficientFunds,NegativeBalance,IdNonExists,AccountBlocked
 from database.models import Transaction,Account
 from database.db import session
 from schemas.schemas import NewTransactionBase
@@ -28,9 +28,11 @@ async def request_create_new_Expense(request: NewTransactionBase):
         raise IdNonExists
     if account_balance.balance < request.value:
         raise InsufficientFunds(balance_ammout=account_balance.balance,withdrawal_amount=request.value)
-    elif account_balance.balance < 0:
+    elif account_balance.balance < 0 :
         request.status = 'cancelada'
-        raise NegativeBalance
+        raise NegativeBalance(balance_value=account_balance.balance)
+    elif account_balance.status == 'bloqueada':
+        raise AccountBlocked()
     else:
         account_balance.balance -= request.value
         session.commit()
