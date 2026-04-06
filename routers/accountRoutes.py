@@ -14,9 +14,10 @@ async def request_return_accounts():
     accounts = session.query(Account).all()
     return [accou.dici() for accou in accounts]
 
-@account_router.get("/{id}")
-async def request_returnId_accounts(request):
-    pass
+@account_router.get("/{bank}")
+async def request_returnBank_accounts(request: AccountBase):
+    acc = session.query(Account).filter_by(bank=request.bank)
+    return list(acc)
 
 @account_router.post('/',status_code=status.HTTP_201_CREATED)
 async def request_create_accounts(request: NewAccountBase):
