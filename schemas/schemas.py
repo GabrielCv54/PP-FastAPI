@@ -126,4 +126,5 @@ class CategoryStatus(str,Enum):
 class CategoryBase(BaseModel):
     type: str  = Field(...,min_length=5,max_length=50)
     limit_value: float
-    
+    description: str = Field(...,max_length=50)
+    status: CategoryStatus
