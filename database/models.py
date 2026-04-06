@@ -49,11 +49,11 @@ class Account(Base):
 class Category(Base):
     __tablename__ = 'category'
     id = Column('id',Integer,primary_key=True,autoincrement=True)
-    type = Column('type',String,nullable=False)
+    type = Column('type',String,nullable=False,unique=True)
     description = Column('description',String,nullable=False)
     limit_value = Column('limit_value',Float,nullable=False)
     status = Column('status',String,nullable=False)
-    #transactions_id = Column('transactions',ARRAY)
+    transactions_id = relationship('Transaction',back_populates="")
 
     def __init__(self,type,description,limit_value,status):
         self.type = type
@@ -74,6 +74,7 @@ class Transaction(Base):
     type_transaction = Column('type_transaction',String,nullable=False)
     user_id = Column(Integer,ForeignKey('user.id'))
     transac_user = relationship('User',back_populates='transactions')
+    category = relationship("Category",back_populates="transactions_id")
     account_id = Column('account_id',Integer,ForeignKey('account.id'))
 
     def __init__(self,description, value, date_transaction, user_id,account_id,type_transaction):
