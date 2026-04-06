@@ -4,6 +4,7 @@ from database.models import Transaction,Account
 from database.db import session
 from schemas.schemas import NewTransactionBase
 from datetime import datetime
+from loguru import logger
 
 transaction_router = APIRouter(
     prefix='/finance',
@@ -30,12 +31,15 @@ async def request_create_new_Expense(request: NewTransactionBase):
         raise InsufficientFunds(balance_ammout=account_balance.balance,withdrawal_amount=request.value)
     elif account_balance.balance < 0 :
         request.status = 'cancelada'
+        logger.warning('❌Recusada!! Essa conta esta bloqueada, precisa ser re ❌')
         raise NegativeBalance(balance_value=account_balance.balance)
     elif account_balance.status == 'bloqueada':
+        logger.warning("❌Cuidado!! Está conta está bloqueada, e não podem ser feitas transações!!❌")
         raise AccountBlocked()
     else:
         account_balance.balance -= request.value
         session.commit()
     session.add(transac)
     session.commit()
+    logger.success("A transação foi concluída sem erros!!")
     return {"Sucesso":"Transação finalizada com sucesso!!"}
