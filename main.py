@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from routers.transactionRoutes import transaction_router
 from routers.accountRoutes import account_router
 from routers.userRoutes import user_router
+from routers.categoryRoutes import category_router
 from erros.errors import FinanceException
 from fastapi import Request
 from fastapi.responses import JSONResponse
@@ -31,6 +32,7 @@ app.add_middleware(
 app.include_router(transaction_router)
 app.include_router(account_router)
 app.include_router(user_router)
+app.include_router(category_router)
 
 
 @app.exception_handler(FinanceException)
