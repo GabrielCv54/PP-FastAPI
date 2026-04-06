@@ -29,6 +29,7 @@ class NewTransactionBase(TransactionBase):
     status: Optional[TransactionStatus] = None
     value: float
     user_id: int
+    category_id: int
     account_id: int
     @field_validator('date_transaction')
     @classmethod

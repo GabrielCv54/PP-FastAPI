@@ -22,7 +22,7 @@ async def request_transactions_userId():
 @transaction_router.post('/transactions/perform_transac',status_code=status.HTTP_201_CREATED)
 async def request_create_new_Expense(request: NewTransactionBase):
     date = request.date_transaction.date()
-    transac = Transaction(value=request.value,description=request.description,date_transaction=date,type_transaction=(request.type_transaction),account_id=request.account_id,user_id=request.user_id)
+    transac = Transaction(value=request.value,description=request.description,date_transaction=date,type_transaction=(request.type_transaction),account_id=request.account_id,user_id=request.user_id,category_id=request.category_id)
     account_balance = session.query(Account).filter_by(id=request.account_id).first()
     if not account_balance:
         raise IdNonExists
