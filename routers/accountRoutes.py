@@ -14,10 +14,13 @@ async def request_return_accounts():
     accounts = session.query(Account).all()
     return [accou.dici() for accou in accounts]
 
-@account_router.get("/{bank}")
-async def request_returnBank_accounts(request: AccountBase):
-    acc = session.query(Account).filter_by(bank=request.bank)
-    return list(acc)
+@account_router.get("/{bank}",status_code=status.HTTP_200_OK)
+async def request_returnBank_accounts(bank: str):
+    try:
+        acc = session.query(Account).filter_by(bank=bank).all()
+        return (acc)
+    except Exception as err:
+        return {"Erro": f'Erro durante o retorno : {err}'}
 
 @account_router.post('/',status_code=status.HTTP_201_CREATED)
 async def request_create_accounts(request: NewAccountBase):
