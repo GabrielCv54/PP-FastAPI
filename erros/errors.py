@@ -7,7 +7,7 @@ class FinanceException(Exception):
 class InsufficientFunds(FinanceException):
     def __init__(self,balance_ammout:float, withdrawal_amount:float):
        message = f"Saldo insuficiente. Seu saldo atual:{balance_ammout} é indiferente com o valor do seu saque :{withdrawal_amount}"
-       super.__init__(message_error=message,status_code=400)
+       super().__init__(message_error=message,status_code=400)
 
 class IdNonExists(FinanceException):
     def __init__(self):
@@ -48,3 +48,8 @@ class AccountNotFound(FinanceException):
     def __init__(self):
         message = 'Conta não encontrada!!'
         super().__init__(message_error=message, status_code=404)
+
+class TransactionNotAccepted(FinanceException):
+    def __init__(self):
+        message = 'Transação rejeitada! Não são aceitas transações com valor maior que R$ 1000,00'
+        super().__init__(self,message_error=message, status_code=400)
