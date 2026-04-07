@@ -100,7 +100,7 @@ class AccountStatus(str, Enum):
     BLOCKED = 'bloqueada'
 
 class AccountBase(BaseModel):
-    balance: Decimal = Field(max_length=10000)
+    balance: Decimal = Field(le=10000)
     type: AccountType
     bank: str = Field(...,min_length=2)
     status: AccountStatus
