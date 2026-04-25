@@ -1,5 +1,5 @@
 from fastapi import APIRouter,Request,status
-from erros.errors import InsufficientFunds,NegativeBalance,IdNonExists,AccountBlocked, TransactionNonAccepted
+from erros.errors import InsufficientFunds,NegativeBalance,IdNonExists,AccountBlocked, TransactionNotAccepted
 from database.models import Transaction,Account
 from database.db import session
 from schemas.schemas import NewTransactionBase
@@ -37,8 +37,8 @@ async def request_create_new_Expense(request: NewTransactionBase):
         logger.warning("❌Cuidado!! Está conta está bloqueada, e não podem ser feitas transações!!❌")
         raise AccountBlocked()
     elif transac.value > 1000:
-        logger.critical("⚠️Cuidado essa valor é muito alto para ser realizado uma transação! ")
-        raise TransactionNonAccepted()
+        logger.critical("⚠️ Cuidado essa valor é muito alto para ser realizado uma transação! ")
+        raise TransactionNotAccepted()
     else:
         account_balance.balance -= request.value
         session.commit()
