@@ -31,3 +31,7 @@ async def request_create_accounts(request: NewAccountBase):
         return {'Sucesso':'A conta foi criada com sucesso!!'}
     except:
         raise {"Erro": AccountNotFound}
+    
+@account_router.put("/{id}",status_code=status.HTTP_201_CREATED)
+async def request_update_account(request):
+    pass
