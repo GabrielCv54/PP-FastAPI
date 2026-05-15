@@ -29,7 +29,7 @@ async def read_user_profile(request: List[UserResponse]):
 async def request_register(request: NewUserBase):
             try:
                   passw = define_password_hash(request.password)
-                  user = User(name=request.name,cpf=request.cpf,email=request.email,data_nasc=request.data_nasc,password=passw)
+                  user = User(name=request.name,cpf=request.cpf,email=request.email,date_nasc=request.date_nasc,password=passw,is_delete=request.is_delete)
                   session.add(user)
                   session.commit()
                   return {"Sucesso":"Usuário registrado com sucesso"}
