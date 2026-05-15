@@ -52,4 +52,4 @@ class AccountNotFound(FinanceException):
 class TransactionNotAccepted(FinanceException):
     def __init__(self):
         message = 'Transação rejeitada! Não são aceitas transações com valor maior que R$ 1000,00'
-        super().__init__(message_error=message, status_code=400)
+        super().__init__(message_error=message, status_code=403)
