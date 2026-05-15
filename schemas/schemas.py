@@ -53,7 +53,8 @@ class UserBase(BaseModel):
     email : str = Field(...,max_length=50)
     cpf: str = Field(None,max_length=11)
     password: str = Field(...,min_length=8,max_length=72)
-        
+    is_delete: Optional[bool]  
+
 class NewUserBase(UserBase):
     cpf: str = Field(...,min_length=11,max_length=11)
     transactions: List[TransactionResponse] = []
