@@ -23,7 +23,7 @@ class User(Base):
         self.is_delete = is_delete
         
     def dici(self):
-        return {"id":self.id,"name":self.name,"cpf":self.cpf,"date_nasc":self.date_nasc,"email":self.email,"password":self.password,"transactions_id":[transac.id for transac in self.transactions]}
+        return {"id":self.id,"name":self.name,"cpf":self.cpf,"date_nasc":self.date_nasc,"email":self.email,"password":self.password,'is_delete':self.is_delete,"transactions_id":[transac.id for transac in self.transactions]}
 
 
 class Account(Base):
