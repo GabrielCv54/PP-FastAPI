@@ -130,3 +130,6 @@ class CategoryBase(BaseModel):
     limit_value: float
     description: str = Field(...,max_length=50)
     status: CategoryStatus
+
+class NewCategoryBase(CategoryBase):
+    pass
